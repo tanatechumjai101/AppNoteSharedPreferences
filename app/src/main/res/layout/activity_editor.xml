@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:weightSum="10"
         android:layout_height="match_parent"
-        tools:context=".MainActivity2">
+        tools:context=".EditorActivity">
         <LinearLayout
                 android:orientation="vertical"
                 android:background="@color/gray"
@@ -16,6 +16,8 @@
                 android:layout_height="match_parent">
             <EditText
                     android:id="@+id/dataText"
+                    android:focusable="auto"
+
                     android:textSize="40sp"
                     android:gravity="top"
                     android:layout_width="match_parent"
