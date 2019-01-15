@@ -9,17 +9,22 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_data.view.*
 
 
-class ListNoteAdapter(
-    val context: Context,
-    val Listdate: ArrayList<Data>
+class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterface)
+    : RecyclerView.Adapter<ListNoteAdapter.ViewHolder>() {
 
-) : RecyclerView.Adapter<ListNoteAdapter.ViewHolder>() {
+    lateinit var mContext: Context
+
+    interface onEditInterface {
+        fun onEditNote(Index: String, DataText:String)
+    }
+
     override fun getItemCount(): Int {
         return Listdate.size
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0?.context).inflate(R.layout.list_data, p0, false)
+        mContext = p0.context
         return ViewHolder(v)
     }
 
@@ -30,14 +35,20 @@ class ListNoteAdapter(
         view.itemView.txt2.text = data.data
 
         view.itemView.btnEdit.setOnClickListener {
-            val intent = Intent(context, EditorActivity::class.java)
-            intent.putExtra("Index", view.itemView.txt1.text.toString())
-            intent.putExtra("DataText", view.itemView.txt2.text.toString())
-            context?.startActivity(intent)
+//            var editor = Intent()
+//            editor.putExtra("Index", "${data.index}")
+//            editor.putExtra("", "${data.data}")
+//            mContext.startActivity(editor)
+            listener.onEditNote(view.itemView.txt1.text.toString(),view.itemView.txt2.text.toString())
+        }
+        view.itemView.btnRemove.setOnClickListener {
+
+
         }
 
 
     }
+
 
     class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
 
