@@ -18,7 +18,6 @@ class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterfa
         fun onEditNote(Index: String, DataText:String)
         fun onDeleteNote(Index: String)
     }
-
     override fun getItemCount(): Int {
         return Listdate.size
     }
@@ -35,17 +34,14 @@ class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterfa
         view.itemView.txt1.text = data.index
         view.itemView.txt2.text = data.data
 
+
         view.itemView.btnEdit.setOnClickListener {
             listener.onEditNote(view.itemView.txt1.text.toString(),view.itemView.txt2.text.toString())
         }
         view.itemView.btnRemove.setOnClickListener {
             listener.onDeleteNote(view.itemView.txt1.text.toString())
         }
-
-
     }
-
-
     class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
 
     }
