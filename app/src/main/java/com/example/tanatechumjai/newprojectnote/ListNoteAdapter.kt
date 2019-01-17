@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.list_data.view.*
 
 class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterface)
     : RecyclerView.Adapter<ListNoteAdapter.ViewHolder>() {
-
     lateinit var mContext: Context
 
     interface onEditInterface {

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.widget.LinearLayout
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import org.json.JSONArray
 
 const val ADD_NEW_NOTE = 12
@@ -68,11 +69,6 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
                 }
             }
         } else if (requestCode == EDIT_NOTE) {
-//            data!!.extras.let {
-//                SavaData()
-//
-//                adapter!!.notifyDataSetChanged()
-//            }
             if (resultCode == Activity.RESULT_OK) {
 
                 data!!.extras.let {
@@ -99,6 +95,13 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
         val json = gson.toJson(listdata)
         editor.putString("DATALIST", json)
         editor.commit()
+
+        if(listdata.size==0){
+
+            textShowEnable.text = "Please fill in the information"
+        }else if(listdata.size>0){
+            textShowEnable.text = ""
+        }
 
     }
 
