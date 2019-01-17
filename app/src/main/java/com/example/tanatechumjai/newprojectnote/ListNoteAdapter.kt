@@ -1,7 +1,6 @@
 package com.example.tanatechumjai.newprojectnote
 
 import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,7 @@ class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterfa
 
     interface onEditInterface {
         fun onEditNote(Index: String, DataText:String)
-        fun onDeleteNote(Index: String)
+        fun onDeleteNote(Index: Int)
     }
     override fun getItemCount(): Int {
         return Listdate.size
@@ -28,10 +27,10 @@ class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterfa
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(view: ViewHolder, p1: Int) {
-        val data: Data = Listdate[p1]
+    override fun onBindViewHolder(view: ViewHolder, position: Int) {
+        val data: Data = Listdate[position]
 
-        view.itemView.txt1.text = data.index
+        view.itemView.txt1.text = (position+1).toString()
         view.itemView.txt2.text = data.data
 
 
@@ -39,7 +38,7 @@ class ListNoteAdapter(val Listdate: ArrayList<Data>, val listener: onEditInterfa
             listener.onEditNote(view.itemView.txt1.text.toString(),view.itemView.txt2.text.toString())
         }
         view.itemView.btnRemove.setOnClickListener {
-            listener.onDeleteNote(view.itemView.txt1.text.toString())
+                    listener.onDeleteNote(position)
         }
     }
     class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {

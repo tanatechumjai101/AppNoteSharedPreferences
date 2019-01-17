@@ -1,18 +1,13 @@
 package com.example.tanatechumjai.newprojectnote
 
 import android.app.Activity
-import android.app.Person
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.widget.LinearLayout
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 
@@ -21,21 +16,19 @@ const val EDIT_NOTE = 13
 
 class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
 
-
-    lateinit var sharedPreference: SharedPreferences
-
     var adapter: ListNoteAdapter? = null
     val listdata = ArrayList<Data>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        LoadData()
+
         Newfilenote()
 
         Recycle1.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         adapter = ListNoteAdapter(listdata, this)
         Recycle1.adapter = adapter
+        LoadData()
 
     }
 
@@ -56,39 +49,50 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
         startActivityForResult(intent, EDIT_NOTE)
     }
 
-    override fun onDeleteNote(Index: String) {
-        listdata.removeAt(Index.toInt() - 1)
-        adapter!!.notifyDataSetChanged()
+    override fun onDeleteNote(Index: Int) {
+//        if(Index.toInt()==Index.toInt()){
+            listdata.removeAt(Index)
+            adapter!!.notifyDataSetChanged()
+            SavaData()
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == ADD_NEW_NOTE) {
+
             if (resultCode == Activity.RESULT_OK) {
                 data!!.extras.let {
-                    listdata.add(Data("${listdata.size + 1}", data.extras.getString("text")))
-                    SavaData()
+                    listdata.add(Data("${listdata.size}", data.extras.getString("text")))
                     adapter!!.notifyDataSetChanged()
+                    SavaData()
                 }
             }
         } else if (requestCode == EDIT_NOTE) {
+            data!!.extras.let {
+                listdata.removeAt(it.getString("index").toInt())
+//                LoadData()
+//                SavaData()
+                adapter!!.notifyDataSetChanged()
+            }
             if (resultCode == Activity.RESULT_OK) {
                 data!!.extras.let {
-                    listdata.removeAt(it.getString("index").toInt() - 1)
-                    listdata.add(it.getString("index").toInt() - 1, Data(it.getString("index"), it.getString("text")))
-                    SavaData()
+                    listdata.add(
+                        it.getString("index").toInt(),
+                        Data(it.getString("index"), it.getString("text"))
+                    )
                     adapter!!.notifyDataSetChanged()
-
-
+                    SavaData()
                 }
+
             }
         }
     }
 
     private fun SavaData() {
-        var sharedPreference: SharedPreferences
-        sharedPreference = getSharedPreferences("SAVE_DATAs", Context.MODE_PRIVATE)
+
+        val sharedPreference = getSharedPreferences("SAVE_DATAs", Context.MODE_PRIVATE)
         val editor = sharedPreference.edit()
         val gson = Gson()
         val json = gson.toJson(listdata)
@@ -100,11 +104,24 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
     private fun LoadData() {
         val sharedPreference = getSharedPreferences("SAVE_DATAs", Context.MODE_PRIVATE)
         if (sharedPreference != null) {
-            val json = JSONArray(sharedPreference.getString("DATALIST", null))
+            val data = sharedPreference.getString("DATALIST", null)
 
-            for (i in 0 until json.length()) {
-                listdata.add(Data(json.getJSONObject(i).getString("index"), json.getJSONObject(i).getString("data")))
+            if (data != null) {
+                val json = JSONArray(data)
+
+                for (i in 0 until json.length()) {
+                    if (i <= listdata.size) {
+                        listdata.add(
+                            Data(
+                                json.getJSONObject(i).getString("index"),
+                                json.getJSONObject(i).getString("data")
+                            )
+                        )
+                    }
+
+                }
             }
+
         }
     }
 }
