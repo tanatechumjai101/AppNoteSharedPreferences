@@ -50,11 +50,9 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
     }
 
     override fun onDeleteNote(Index: Int) {
-//        if(Index.toInt()==Index.toInt()){
             listdata.removeAt(Index)
             adapter!!.notifyDataSetChanged()
             SavaData()
-//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -70,21 +68,24 @@ class ListNoteActivity : AppCompatActivity(), ListNoteAdapter.onEditInterface {
                 }
             }
         } else if (requestCode == EDIT_NOTE) {
-            data!!.extras.let {
-                listdata.removeAt(it.getString("index").toInt())
-//                LoadData()
+//            data!!.extras.let {
 //                SavaData()
-                adapter!!.notifyDataSetChanged()
-            }
+//
+//                adapter!!.notifyDataSetChanged()
+//            }
             if (resultCode == Activity.RESULT_OK) {
+
                 data!!.extras.let {
+
                     listdata.add(
                         it.getString("index").toInt(),
                         Data(it.getString("index"), it.getString("text"))
                     )
+                    listdata.removeAt(it.getString("index").toInt() - 1)
                     adapter!!.notifyDataSetChanged()
-                    SavaData()
+
                 }
+                SavaData()
 
             }
         }
